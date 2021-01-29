@@ -1,0 +1,68 @@
+# action.yml
+name: 'Changelog Generator'
+description: 'Generates changelog on a pull request automatically'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    required: true
+    default: ${{ github.token }}
+
+  outputFile:
+    description: 'The output file. Use output if not provided'
+    required: false
+
+  since:
+    description: 'Tag to generate since. Uses since latest release if not provided'
+    required: false
+  
+  complete:
+    description: 'Whether to generate the complete changelog. This is not recommended as it will fetch all tags and all pull requests. Complete and since cannot be used together.'
+    required: true
+    default: 'false'
+
+  nextTag:
+    description: 'The tag of the next version'
+    required: false
+
+  filter:
+    description: 'Filter regex'
+    required: false
+  
+  labels:
+    description: 'Group Labels'
+    required: false
+
+  includeUntagged:
+    description: 'Whether to include untagged PRs. Defaults to true.'
+    required: true
+    default: 'true'
+
+  repository:
+    description: 'github repository name'
+    required: true
+    default: ${{ github.repository }}
+  
+  action_path:
+    description: 'github action checkout path.'
+    required: true
+    default: ${{ github.action_path }}
+
+outputs:
+  changelog:
+    description: the generated changelog
+    value: ${{ steps.generate.outputs.changelog }}
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.repository }}
+    - ${{ inputs.token }}
+    - ${{ inputs.outputFile }}
+    - ${{ inputs.since }}
+    - ${{ inputs.complete }}
+    - ${{ inputs.nextTag }}
+    - ${{ inputs.filter }}
+    - ${{ inputs.labels }}
+    - ${{ inputs.includeUntagged }}
+    - ${{ inputs.action_path }}

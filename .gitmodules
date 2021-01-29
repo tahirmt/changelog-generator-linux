@@ -1,0 +1,3 @@
+[submodule "changelog-generator"]
+	path = changelog-generator
+	url = https://github.com/tahirmt/changelog-generator
